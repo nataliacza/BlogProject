@@ -2,7 +2,7 @@
 
 namespace BlogProject.Models
 {
-    public class Post
+    public class Posts
     {
         [Key]
         public int Id { get; set; }
@@ -11,7 +11,7 @@ namespace BlogProject.Models
         public string Content { get; set; }
         public DateTime CreatedDate { get; set;  }
 
-        public Post()
+        public Posts()
         {
             CreatedDate = DateTime.Now;
         }

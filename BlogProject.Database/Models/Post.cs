@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace BlogProject.Models
+namespace BlogProject.Database.Models
 {
-    public class Posts
+    public class Post
     {
         [Key]
         public int Id { get; set; }

@@ -14,7 +14,7 @@ namespace BlogProject.Services.Posts
             _dbContext = dbContext;
         }
 
-        public IEnumerable<PostDto> GetPosts()
+        public List<PostDto> GetPost()
         {
             var allPosts = _dbContext.Posts
                 .Select(x => new PostDto
@@ -24,18 +24,30 @@ namespace BlogProject.Services.Posts
                     Content = x.Content,
                     CreatedDate = x.CreatedDate,
                     Author = x.Author
-                });
+                }).ToList();
 
             return allPosts;
         }
 
-        public IEnumerable<PostDto> GetSinglePost(int postId)
+        public PostDto GetPost(int postId)
         {
-            var singlePost = _dbContext.Posts.SingleOrDefault(
-                x => x.Id == postId
-                );
+            // var singlePost1 = _dbContext.Posts.FirstOrDefault(x => x.Id == postId);
 
-            // here we need to cover somehow if ID is null
+            var singlePost = _dbContext.Posts
+                .Select(x => new PostDto() 
+                {
+                    Id = x.Id,
+                    Title = x.Title,
+                    Content = x.Content,
+                    CreatedDate = x.CreatedDate,
+                    Author = x.Author
+                }).SingleOrDefault(x => x.Id == postId);
+
+
+            if (singlePost == null)
+            {
+                throw new ArgumentException($"Post with ID {postId} not exist.");
+            }
 
             return singlePost;
         }

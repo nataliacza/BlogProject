@@ -17,7 +17,14 @@ namespace BlogProject.Services.Posts
 
         public PostDto RemovePost(int postId)
         {
-            var singlePost = _dbContext.Posts.FirstOrDefault(x => x.Id == postId);
+            // var singlePost1 = _dbContext.Posts.FirstOrDefault(x => x.Id == postId);
+
+            var singlePost = _dbContext.Posts
+                .Select(x => new PostDto()
+                {
+                    Id = x.Id,
+                }).SingleOrDefault(x => x.Id == postId);
+
 
             if (singlePost == null)
             {
@@ -25,9 +32,9 @@ namespace BlogProject.Services.Posts
             }
 
             _dbContext.Remove(postId);
+            _dbContext.SaveChanges();
 
             return singlePost;
-            
         }
     }
 }

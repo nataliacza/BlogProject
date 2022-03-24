@@ -15,9 +15,12 @@ namespace BlogProject.Services.Posts
 
         public PostDto AddPost(PostDto postDto)
         {
-            var post = ...;
+            var newPost = _dbContext.Posts.Add;  // ??????????
 
-            return new PostDto();
+            _dbContext.Add(newPost);
+            _dbContext.SaveChanges();
+
+            return default;      // ??????????
         }
 
     }

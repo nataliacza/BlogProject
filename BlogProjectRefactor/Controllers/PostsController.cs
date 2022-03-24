@@ -1,4 +1,5 @@
-﻿using BlogProject.Services.Interfaces.Posts;
+﻿using BlogProject.Dtos.Posts;
+using BlogProject.Services.Interfaces.Posts;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BlogProjectRefactor.Controllers
@@ -22,47 +23,46 @@ namespace BlogProjectRefactor.Controllers
         //GET POST LIST
         [HttpGet]
         [Route("api/posts")]
-        public IActionResult GetPosts()
+        public IActionResult GetPost()
         {
-            var posts = _postGetter.GetPosts();
+            var posts = _postGetter.GetPost();
             return Ok(posts);
         }
 
         //GET SINGLE POST
         [HttpGet]
         [Route("api/posts/{id}")]
-        public IActionResult GetPostDetail(int id)
+        public IActionResult GetPostDetail(int postId)
         {
-            var postDetail = _postGetter.GetSinglePost(id);
+            var postDetail = _postGetter.GetPost(postId);
             return Ok(postDetail);
-        }
-
-        //CREATE NEW POST
-        [HttpPost]
-        [Route("api/posts/create")]
-        public IActionResult CreatePost()
-        {
-            var posts = _postAdder.AddPost();
-            return Ok(posts);
         }
 
         //REMOVE A POST
         [HttpDelete]
         [Route("api/posts/{id}")]
-        public IActionResult RemovePost(int id)
+        public IActionResult RemovePost(int postId)
         {
-            var removePost = _postRemover.RemovePost(id);
+            var removePost = _postRemover.RemovePost(postId);
             return Ok(removePost);
         }
 
-        //UPDATE A POST
-        //[HttpPut]
-        //[Route("api/posts/{id}")]
-        //public IActionResult UpdatePost(int id)
-        //{
-        //    var updatePost = _postUpdater.UpdatePost(id);
-        //    return Ok(updatePost);
-        //}
+        //CREATE NEW POST
+        [HttpPost]
+        [Route("api/posts/create")]
+        public IActionResult AddPost([FromBody] PostDto postDto)
+        {
+            var addPost = _postAdder.AddPost(postDto);
+            return Ok(addPost);
+        }
 
+        //UPDATE A POST
+        [HttpPut]
+        [Route("api/posts/{id}")]
+        public IActionResult UpdatePost(int postId, [FromBody] PostDto postDto)
+        {
+            var updatePost = _postUpdater.UpdatePost(postId, postDto);
+            return Ok(updatePost);
+        }
     }
 }

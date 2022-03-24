@@ -14,9 +14,9 @@ namespace BlogProject.Services.Posts
             _dbContext = dbContext;
         }
 
-        public IEnumerable<PostDto> Get()
+        public IEnumerable<PostDto> GetPosts()
         {
-            return _dbContext.Posts
+            var allPosts = _dbContext.Posts
                 .Select(x => new PostDto
                 {
                     Id = x.Id,
@@ -25,15 +25,19 @@ namespace BlogProject.Services.Posts
                     CreatedDate = x.CreatedDate,
                     Author = x.Author
                 });
+
+            return allPosts;
         }
 
-        public PostDto Get(int id)
+        public IEnumerable<PostDto> GetSinglePost(int postId)
         {
-            var post = _dbContext.Posts.FirstOrDefault(
-                x => x.Id == id
+            var singlePost = _dbContext.Posts.SingleOrDefault(
+                x => x.Id == postId
                 );
 
-            return new PostDto(post);
+            // here we need to cover somehow if ID is null
+
+            return singlePost;
         }
     }
 }

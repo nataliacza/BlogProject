@@ -1,4 +1,5 @@
-﻿using BlogProject.Services.Interfaces.Posts;
+﻿using BlogProject.Dtos.Posts;
+using BlogProject.Services.Interfaces.Posts;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BlogProjectRefactor.Controllers
@@ -7,46 +8,61 @@ namespace BlogProjectRefactor.Controllers
     public class PostsContoller : ControllerBase
     {
         private readonly IPostGetter _postGetter;
+        private readonly IPostAdder _postAdder;
+        private readonly IPostUpdater _postUpdater;
+        private readonly IPostRemover _postRemover;
 
-        public PostsContoller(IPostGetter postGetter)
+        public PostsContoller(IPostGetter postGetter, IPostAdder postAdder, IPostUpdater postUpdater, IPostRemover postRemover)
         {
             _postGetter = postGetter;
+            _postAdder = postAdder;
+            _postUpdater = postUpdater;
+            _postRemover = postRemover;
         }
 
         //GET POST LIST
         [HttpGet]
         [Route("api/posts")]
-        public IActionResult GetPosts()
+        public IActionResult GetPost()
         {
-            var posts = _postGetter.Get();
+            var posts = _postGetter.GetPost();
             return Ok(posts);
         }
 
-        //GET POST DETAIL
+        //GET SINGLE POST
         [HttpGet]
         [Route("api/posts/{id}")]
-        public IActionResult GetPostDetail(int id)
+        public IActionResult GetPostDetail(int postId)
         {
-            var postDetail = _postGetter.Get(id);
+            var postDetail = _postGetter.GetPost(postId);
             return Ok(postDetail);
         }
 
-        //CREATE NEW POST
-        //[HttpGet]
-        //[Route("api/posts/create")]
-        //public IActionResult CreatePost()
-        //{
-        //    var posts = _postGetter.Add();
-        //    return Ok(posts);
-        //}
+        //REMOVE A POST
+        [HttpDelete]
+        [Route("api/posts/{id}")]
+        public IActionResult RemovePost(int postId)
+        {
+            var removePost = _postRemover.RemovePost(postId);
+            return Ok(removePost);
+        }
 
-        //DELETE POST
-        //[HttpGet]
-        //[Route("api/posts")]
-        //public IActionResult DeletePost()
-        //{
-        //    var posts = _postGetter.Delete();
-        //    return Ok(posts);
-        //}
+        //CREATE NEW POST
+        [HttpPost]
+        [Route("api/posts/create")]
+        public IActionResult AddPost([FromBody] PostDto postDto)
+        {
+            var addPost = _postAdder.AddPost(postDto);
+            return Ok(addPost);
+        }
+
+        //UPDATE A POST
+        [HttpPut]
+        [Route("api/posts/{id}")]
+        public IActionResult UpdatePost(int postId, [FromBody] PostDto postDto)
+        {
+            var updatePost = _postUpdater.UpdatePost(postId, postDto);
+            return Ok(updatePost);
+        }
     }
 }

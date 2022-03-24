@@ -14,9 +14,9 @@ namespace BlogProject.Services.Posts
             _dbContext = dbContext;
         }
 
-        public IEnumerable<PostDto> Get()
+        public List<PostDto> GetPost()
         {
-            return _dbContext.Posts
+            var allPosts = _dbContext.Posts
                 .Select(x => new PostDto
                 {
                     Id = x.Id,
@@ -24,16 +24,32 @@ namespace BlogProject.Services.Posts
                     Content = x.Content,
                     CreatedDate = x.CreatedDate,
                     Author = x.Author
-                });
+                }).ToList();
+
+            return allPosts;
         }
 
-        public PostDto Get(int id)
+        public PostDto GetPost(int postId)
         {
-            var post = _dbContext.Posts.FirstOrDefault(
-                x => x.Id == id
-                );
+            // var singlePost1 = _dbContext.Posts.FirstOrDefault(x => x.Id == postId);
 
-            return new PostDto(post);
+            var singlePost = _dbContext.Posts
+                .Select(x => new PostDto() 
+                {
+                    Id = x.Id,
+                    Title = x.Title,
+                    Content = x.Content,
+                    CreatedDate = x.CreatedDate,
+                    Author = x.Author
+                }).SingleOrDefault(x => x.Id == postId);
+
+
+            if (singlePost == null)
+            {
+                throw new ArgumentException($"Post with ID {postId} not exist.");
+            }
+
+            return singlePost;
         }
     }
 }

@@ -14,7 +14,7 @@ namespace BlogProject.Services.Posts
             _dbContext = dbContext;
         }
 
-        public List<PostDto> GetPost()
+        public IEnumerable<PostDto> GetPost()
         {
             var allPosts = _dbContext.Posts
                 .Select(x => new PostDto
@@ -24,7 +24,7 @@ namespace BlogProject.Services.Posts
                     Content = x.Content,
                     CreatedDate = x.CreatedDate,
                     Author = x.Author
-                }).ToList();
+                }).ToArray();
 
             return allPosts;
         }
@@ -42,7 +42,6 @@ namespace BlogProject.Services.Posts
                     CreatedDate = x.CreatedDate,
                     Author = x.Author
                 }).SingleOrDefault(x => x.Id == postId);
-
 
             if (singlePost == null)
             {

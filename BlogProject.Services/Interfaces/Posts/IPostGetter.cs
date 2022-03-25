@@ -4,7 +4,7 @@ namespace BlogProject.Services.Interfaces.Posts
 {
     public interface IPostGetter
     {
-        IEnumerable<PostDto> GetPost();
-        PostDto GetPost(int id);
+        IEnumerable<PostDto> GetAllPosts();
+        PostDto GetSinglePost(int id);
     }
 }

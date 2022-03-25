@@ -14,7 +14,7 @@ namespace BlogProject.Services.Posts
             _dbContext = dbContext;
         }
 
-        public IEnumerable<PostDto> GetPost()
+        public IEnumerable<PostDto> GetAllPosts()
         {
             var allPosts = _dbContext.Posts
                 .Select(x => new PostDto
@@ -29,12 +29,12 @@ namespace BlogProject.Services.Posts
             return allPosts;
         }
 
-        public PostDto GetPost(int postId)
+        public PostDto GetSinglePost(int postId)
         {
-            // var singlePost1 = _dbContext.Posts.FirstOrDefault(x => x.Id == postId);
+            //var singlePost1 = _dbContext.Posts.FirstOrDefault(x => x.Id == postId);
 
             var singlePost = _dbContext.Posts
-                .Select(x => new PostDto() 
+                .Select(x => new PostDto 
                 {
                     Id = x.Id,
                     Title = x.Title,

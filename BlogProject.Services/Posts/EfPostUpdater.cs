@@ -18,25 +18,23 @@ namespace BlogProject.Services.Posts
         {
             //var post = _dbContext.Posts.FirstOrDefault(x => x.Id == postId);
 
-            var post = _dbContext.Posts
-                .Select(x => new PostDto()
-                {
-                    Id = x.Id,
-                    Title = x.Title,
-                    Content = x.Content,
-                    CreatedDate = x.CreatedDate,
-                    Author = x.Author
-                }).SingleOrDefault();    //?????????????????
+            var existingID = _dbContext.Posts.Find(postId);
 
-            if (post == null)
+            if (existingID == null)
             {
-                throw new ArgumentException($"Post Id: {postId} not exist.");
+                throw new KeyNotFoundException($"Post Id: {postId} not exist.");
             }
 
-            _dbContext.Update(post);
+            PostDto updatedItem = new PostDto
+            {
+                Title = postDto.Title,
+                Content = postDto.Content,
+            };
+
+            _dbContext.Update(updatedItem);
             _dbContext.SaveChanges();
 
-            return post;
+            return updatedItem;
 
         }
     }

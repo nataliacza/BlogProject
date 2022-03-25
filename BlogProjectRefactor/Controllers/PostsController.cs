@@ -25,7 +25,7 @@ namespace BlogProjectRefactor.Controllers
         [Route("api/posts")]
         public IActionResult GetPost()
         {
-            var posts = _postGetter.GetPost();
+            var posts = _postGetter.GetAllPosts();
             return Ok(posts);
         }
 
@@ -34,7 +34,7 @@ namespace BlogProjectRefactor.Controllers
         [Route("api/posts/{id}")]
         public IActionResult GetPostDetail(int postId)
         {
-            var postDetail = _postGetter.GetPost(postId);
+            var postDetail = _postGetter.GetSinglePost(postId);
             return Ok(postDetail);
         }
 
@@ -49,8 +49,8 @@ namespace BlogProjectRefactor.Controllers
 
         //CREATE NEW POST
         [HttpPost]
-        [Route("api/posts/create")]
-        public IActionResult AddPost([FromBody] PostDto postDto)
+        [Route("api/posts")]
+        public IActionResult AddPost(PostDto postDto)
         {
             var addPost = _postAdder.AddPost(postDto);
             return Ok(addPost);
@@ -59,7 +59,7 @@ namespace BlogProjectRefactor.Controllers
         //UPDATE A POST
         [HttpPut]
         [Route("api/posts/{id}")]
-        public IActionResult UpdatePost(int postId, [FromBody] PostDto postDto)
+        public IActionResult UpdatePost(int postId, PostDto postDto)
         {
             var updatePost = _postUpdater.UpdatePost(postId, postDto);
             return Ok(updatePost);

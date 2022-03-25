@@ -17,22 +17,24 @@ namespace BlogProject.Services.Posts
         {
             // throw new NotImplementedException();
 
-            //var newPost = ...;
-
-            //_dbContext.Add(newPost);
-            //_dbContext.SaveChanges();
-
-            //return newPost;      // ??????????
-
-            if (postDto == null)
+            PostDto newPost = new PostDto()
             {
-                throw new ArgumentNullException("Cannot be null!");
-            }
+                Id = postDto.Id,
+                Title = postDto.Title,
+                Content = postDto.Content,
+                CreatedDate = DateTime.UtcNow,
+                Author = postDto.Author,
+            };
 
-            _dbContext.Add(postDto);
+            //if (postDto == null)
+            //{
+            //    throw new ArgumentNullException("Cannot be null!");
+            //}
+
+            _dbContext.Add(newPost);
             _dbContext.SaveChanges();
 
-            return postDto;
+            return newPost;
 
         }
 

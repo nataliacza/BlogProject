@@ -15,12 +15,25 @@ namespace BlogProject.Services.Posts
 
         public PostDto AddPost(PostDto postDto)
         {
-            var newPost = _dbContext.Posts.Add;  // ??????????
+            // throw new NotImplementedException();
 
-            _dbContext.Add(newPost);
+            //var newPost = ...;
+
+            //_dbContext.Add(newPost);
+            //_dbContext.SaveChanges();
+
+            //return newPost;      // ??????????
+
+            if (postDto == null)
+            {
+                throw new ArgumentNullException("Cannot be null!");
+            }
+
+            _dbContext.Add(postDto);
             _dbContext.SaveChanges();
 
-            return default;      // ??????????
+            return postDto;
+
         }
 
     }

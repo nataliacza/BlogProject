@@ -37,6 +37,7 @@ namespace BlogProject.Services.Posts
             _dbContext.SaveChanges();
 
             return post;
+
         }
     }
 }

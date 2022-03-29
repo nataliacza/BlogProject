@@ -1,6 +1,7 @@
 ﻿using BlogProject.Services.Interfaces.Posts;
 using BlogProject.Database;
 using BlogProject.Dtos.Posts;
+using BlogProject.Database.Models;
 
 namespace BlogProject.Services.Posts
 {
@@ -13,26 +14,32 @@ namespace BlogProject.Services.Posts
             _dbContext = dbContext;
         }
 
-        public PostDto AddPost(PostDto postDto)
+        public PostDto AddPost(AddPostDto postDto)
         {
-            // throw new NotImplementedException();
-
-            //var newPost = ...;
-
-            //_dbContext.Add(newPost);
-            //_dbContext.SaveChanges();
-
-            //return newPost;      // ??????????
-
-            if (postDto == null)
+            var newPost = new Post
             {
-                throw new ArgumentNullException("Cannot be null!");
-            }
+                Title = postDto.Title,
+                Content = postDto.Content,
+                Author = postDto.Author,
+                CreatedDate = DateTime.UtcNow,
+            };
 
-            _dbContext.Add(postDto);
+            //if (postDto == null)
+            //{
+            //    throw new ArgumentNullException("Cannot be null!");
+            //}
+
+            _dbContext.Posts.Add(newPost);
             _dbContext.SaveChanges();
 
-            return postDto;
+            return new PostDto 
+            {
+                Id = newPost.Id,
+                Title = newPost.Title,
+                Content = newPost.Content,
+                Author = newPost.Author,
+                CreatedDate = newPost.CreatedDate,
+            };
 
         }
 

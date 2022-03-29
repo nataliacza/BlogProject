@@ -14,29 +14,28 @@ namespace BlogProject.Services.Posts
             _dbContext = dbContext;
         }
 
-        public PostDto UpdatePost(int postId, PostDto postDto)
+        public UpdatePostDto UpdatePost(int postId, UpdatePostDto postDto)
         {
-            //var post = _dbContext.Posts.FirstOrDefault(x => x.Id == postId);
+            var existingPost = _dbContext.Posts.FirstOrDefault(x => x.Id == postId);
 
-            var post = _dbContext.Posts
-                .Select(x => new PostDto()
-                {
-                    Id = x.Id,
-                    Title = x.Title,
-                    Content = x.Content,
-                    CreatedDate = x.CreatedDate,
-                    Author = x.Author
-                }).SingleOrDefault();    //?????????????????
-
-            if (post == null)
+            if (existingPost == null)
             {
-                throw new ArgumentException($"Post Id: {postId} not exist.");
+                return null;
             }
 
-            _dbContext.Update(post);
+            UpdatePostDto updatedDetails = new UpdatePostDto
+            {
+                Title = postDto.Title,
+                Content = postDto.Content,
+            };
+
+            existingPost.Title = postDto.Title;
+            existingPost.Content = postDto.Content;
+
+            _dbContext.Posts.Update(existingPost);
             _dbContext.SaveChanges();
 
-            return post;
+            return updatedDetails;
 
         }
     }

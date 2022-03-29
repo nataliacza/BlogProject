@@ -32,6 +32,9 @@ namespace BlogProjectRefactor
                 options.UseSqlServer(connectionString));
 
             services.AddScoped<IPostGetter, EfPostGetter>();
+            services.AddScoped<IPostAdder, EfPostAdder>();
+            services.AddScoped<IPostRemover, EfPostRemover>();
+            services.AddScoped<IPostUpdater, EfPostUpdater>();
 
             services.AddControllersWithViews();
         }

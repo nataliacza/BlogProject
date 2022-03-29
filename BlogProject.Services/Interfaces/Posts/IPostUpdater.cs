@@ -5,6 +5,6 @@ namespace BlogProject.Services.Interfaces.Posts
 {
     public interface IPostUpdater
     {
-        PostDto UpdatePost(int id, PostDto postDto);
+        UpdatePostDto UpdatePost(int id, UpdatePostDto postDto);
     }
 }

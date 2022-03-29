@@ -17,24 +17,32 @@ namespace BlogProject.Services.Posts
 
         public PostDto RemovePost(int postId)
         {
-            // var singlePost1 = _dbContext.Posts.FirstOrDefault(x => x.Id == postId);
+            // var singlePost = _dbContext.Posts.Find(postId);
 
-            var singlePost = _dbContext.Posts
-                .Select(x => new PostDto()
-                {
-                    Id = x.Id,
-                }).SingleOrDefault(x => x.Id == postId);
+            //var singlePost = _dbContext.Posts
+            //    .Select(x => new PostDto()
+            //    {
+            //        Id = x.Id,
+            //    }).SingleOrDefault(x => x.Id == postId);
 
+            var singlePost = _dbContext.Posts.FirstOrDefault(x => x.Id == postId);
 
             if (singlePost == null)
             {
-                throw new ArgumentException($"Post with ID {postId} not exist.");
+                throw new ArgumentException($"Post {postId} not found.");
             }
-
-            _dbContext.Remove(postId);
+            
+            _dbContext.Posts.Remove(singlePost);
             _dbContext.SaveChanges();
 
-            return singlePost;
+            return new PostDto
+            {
+                Id = singlePost.Id,
+                Title = singlePost.Title,
+                Content = singlePost.Content,
+                Author = singlePost.Author,
+                CreatedDate = singlePost.CreatedDate,
+            };
         }
     }
 }

@@ -5,6 +5,6 @@ namespace BlogProject.Services.Interfaces.Posts
 {
     public interface IPostAdder
     {
-        PostDto AddPost(PostDto postDto);
+        PostDto AddPost(AddPostDto postDto);
     }
 }

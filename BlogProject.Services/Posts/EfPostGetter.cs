@@ -1,7 +1,7 @@
 ﻿using BlogProject.Services.Interfaces.Posts;
 using BlogProject.Database;
 using BlogProject.Dtos.Posts;
-
+using Microsoft.EntityFrameworkCore;
 
 namespace BlogProject.Services.Posts
 {
@@ -14,9 +14,9 @@ namespace BlogProject.Services.Posts
             _dbContext = dbContext;
         }
 
-        public IEnumerable<PostDto> GetAllPosts()
+        public async Task<IEnumerable<PostDto>> GetAllPosts()
         {
-            var allPosts = _dbContext.Posts
+            var posts = await _dbContext.Posts
                 .Select(x => new PostDto
                 {
                     Id = x.Id,
@@ -24,29 +24,13 @@ namespace BlogProject.Services.Posts
                     Content = x.Content,
                     CreatedDate = x.CreatedDate,
                     Author = x.Author
-                }).ToArray();
+                }).ToArrayAsync();
 
-            return allPosts;
+            return posts;
         }
 
         public PostDto GetSinglePost(int postId)
         {
-            // var singlePost = _dbContext.Posts.Where(x => x.Id == postId).FirstOrDefault();
-            // var singlePost = _dbContext.Posts.SingleOrDefault(x => x.Id == postId);
-            // var singlePost = _dbContext.Posts.Find(postId);
-
-            //var singlePost = _dbContext.Posts
-            //    .Where(x => x.Id == postId)
-            //    .Select(x => new PostDto
-            //    {
-            //        Id = x.Id,
-            //        Title = x.Title,
-            //        Content = x.Content,
-            //        CreatedDate = x.CreatedDate,
-            //        Author = x.Author
-            //    })
-            //    .FirstOrDefault();
-
             var singlePost = _dbContext.Posts.FirstOrDefault(x => x.Id == postId);
 
             if (singlePost == null)

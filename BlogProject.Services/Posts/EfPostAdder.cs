@@ -24,10 +24,10 @@ namespace BlogProject.Services.Posts
                 CreatedDate = DateTime.UtcNow,
             };
 
-            //if (postDto == null)
-            //{
-            //    throw new ArgumentNullException("Cannot be null!");
-            //}
+            if (postDto == null)
+            {
+                return null;
+            }
 
             _dbContext.Posts.Add(newPost);
             _dbContext.SaveChanges();
@@ -45,8 +45,3 @@ namespace BlogProject.Services.Posts
 
     }
 }
-
-
-
-
-

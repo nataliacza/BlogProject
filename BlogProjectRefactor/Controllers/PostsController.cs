@@ -1,7 +1,11 @@
-﻿using BlogProject.Dtos.Posts;
-using BlogProject.Services.Interfaces.Posts;
-using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using BlogProject.Dtos.Posts;
+using BlogProject.Services.Interfaces.Posts;
+
 
 namespace BlogProjectRefactor.Controllers
 {
@@ -36,6 +40,12 @@ namespace BlogProjectRefactor.Controllers
         public IActionResult GetPostDetail(int postId)
         {
             var postDetail = _postGetter.GetSinglePost(postId);
+
+            if (postDetail is null)
+            {
+                return NotFound();
+            }
+            
             return Ok(postDetail);
         }
 
@@ -43,6 +53,12 @@ namespace BlogProjectRefactor.Controllers
         public IActionResult RemovePost(int postId)
         {
             var removedPost = _postRemover.RemovePost(postId);
+
+            if (removedPost is null)
+            {
+                return NotFound();
+            }
+
             return Ok(removedPost);
         }
 
@@ -50,7 +66,8 @@ namespace BlogProjectRefactor.Controllers
         public IActionResult AddPost([FromBody] AddPostDto addPostDto)
         {
             var addPost = _postAdder.AddPost(addPostDto);
-            return Ok(addPost);
+            string resourceCreated = "Resource created!";
+            return Created(resourceCreated, addPostDto);
         }
 
         [HttpPut("{postId}")]

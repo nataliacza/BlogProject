@@ -1,4 +1,5 @@
-﻿using BlogProject.Services.Interfaces.Posts;
+﻿using AutoMapper;
+using BlogProject.Services.Interfaces.Posts;
 using BlogProject.Database;
 using BlogProject.Dtos.Posts;
 
@@ -8,35 +9,34 @@ namespace BlogProject.Services.Posts
     public class EfPostUpdater : IPostUpdater
     {
         private readonly ApplicationDbContext _dbContext;
+        private readonly IMapper _autoMapper;
 
-        public EfPostUpdater(ApplicationDbContext dbContext)
+
+        public EfPostUpdater(
+            ApplicationDbContext dbContext,
+            IMapper autoMapper)
         {
             _dbContext = dbContext;
+            _autoMapper = autoMapper;
         }
 
         public PostDto UpdatePost(int postId, UpdatePostDto updatePostDto)
         {
-            var existingPost = _dbContext.Posts.FirstOrDefault(x => x.Id == postId);
+            var postFromDb = _dbContext.Posts.FirstOrDefault(x => x.Id == postId);
 
-            if (existingPost == null)
+            if (postFromDb == null)
             {
                 return null;
             }
 
-            existingPost.Title = updatePostDto.Title;
-            existingPost.Content = updatePostDto.Content;
+            var mappedPost = _autoMapper.Map(updatePostDto, postFromDb);
 
-            _dbContext.Posts.Update(existingPost);
+            _dbContext.Posts.Update(postFromDb);
             _dbContext.SaveChanges();
 
-            return new PostDto
-            {
-                Id = existingPost.Id,
-                Title = existingPost.Title,
-                Content = existingPost.Content,
-                Author = existingPost.Author,
-                CreatedDate = existingPost.CreatedDate,
-            };
+            var result = _autoMapper.Map<PostDto>(postFromDb);
+
+            return result;
         }
     }
 }

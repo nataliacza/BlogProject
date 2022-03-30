@@ -1,4 +1,5 @@
-﻿using BlogProject.Services.Interfaces.Posts;
+﻿using AutoMapper;
+using BlogProject.Services.Interfaces.Posts;
 using BlogProject.Database;
 using BlogProject.Dtos.Posts;
 using Microsoft.EntityFrameworkCore;
@@ -8,44 +9,37 @@ namespace BlogProject.Services.Posts
     public class EfPostGetter: IPostGetter
     {
         private readonly ApplicationDbContext _dbContext;
+        private readonly IMapper _autoMapper;
 
-        public EfPostGetter(ApplicationDbContext dbContext)
+        public EfPostGetter(
+            ApplicationDbContext dbContext,
+            IMapper autoMapper)
         {
             _dbContext = dbContext;
+            _autoMapper = autoMapper;
         }
 
         public async Task<IEnumerable<PostDto>> GetAllPosts()
         {
-            var posts = await _dbContext.Posts
-                .Select(x => new PostDto
-                {
-                    Id = x.Id,
-                    Title = x.Title,
-                    Content = x.Content,
-                    CreatedDate = x.CreatedDate,
-                    Author = x.Author
-                }).ToArrayAsync();
+            var allPostsFromDb = await _dbContext.Posts.ToArrayAsync();
 
-            return posts;
+            var allMappedPosts = _autoMapper.Map<IEnumerable<PostDto>>(allPostsFromDb);
+
+            return allMappedPosts;
         }
 
         public PostDto GetSinglePost(int postId)
         {
-            var singlePost = _dbContext.Posts.FirstOrDefault(x => x.Id == postId);
+            var getSinglePost = _dbContext.Posts.FirstOrDefault(x => x.Id == postId);
 
-            if (singlePost == null)
+            if (getSinglePost == null)
             {
                 return null;
             }
 
-            return new PostDto
-            {
-                Id = singlePost.Id,
-                Title = singlePost.Title,
-                Content = singlePost.Content,
-                CreatedDate = singlePost.CreatedDate,
-                Author = singlePost.Author
-            };
+            var singleMappedPost = _autoMapper.Map<PostDto>(getSinglePost);
+
+            return singleMappedPost;
         }
     }
 }

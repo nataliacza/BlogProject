@@ -1,17 +1,11 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using BlogProject.Services.Interfaces.Posts;
-using BlogProject.Services.Posts;
 using BlogProject.Database;
-using Microsoft.EntityFrameworkCore;
+using BlogProjectRefactor.Configuration;
 
 namespace BlogProjectRefactor
 {
@@ -31,10 +25,8 @@ namespace BlogProjectRefactor
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(connectionString));
 
-            services.AddScoped<IPostGetter, EfPostGetter>();
-            services.AddScoped<IPostAdder, EfPostAdder>();
-            services.AddScoped<IPostRemover, EfPostRemover>();
-            services.AddScoped<IPostUpdater, EfPostUpdater>();
+            services.AddAutomapper();
+            services.AddServices();
 
             services.AddControllersWithViews();
         }

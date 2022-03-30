@@ -1,6 +1,7 @@
 ﻿using BlogProject.Dtos.Posts;
 using BlogProject.Services.Interfaces.Posts;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace BlogProjectRefactor.Controllers
 {
@@ -12,7 +13,11 @@ namespace BlogProjectRefactor.Controllers
         private readonly IPostRemover _postRemover;
         private readonly IPostUpdater _postUpdater;
         
-        public PostsContoller(IPostGetter postGetter, IPostAdder postAdder, IPostRemover postRemover, IPostUpdater postUpdater)
+        public PostsContoller(
+            IPostGetter postGetter,
+            IPostAdder postAdder, 
+            IPostRemover postRemover, 
+            IPostUpdater postUpdater)
         {
             _postGetter = postGetter;
             _postAdder = postAdder;
@@ -20,29 +25,20 @@ namespace BlogProjectRefactor.Controllers
             _postUpdater = postUpdater;
         }
 
-        //GET POST LIST
         [HttpGet]
-        public IActionResult GetPost()
+        public async Task<IActionResult> GetPost()
         {
-            var posts = _postGetter.GetAllPosts();
+            var posts = await _postGetter.GetAllPosts();
             return Ok(posts);
         }
 
-        //GET SINGLE POST
         [HttpGet("{postId}")]
         public IActionResult GetPostDetail(int postId)
         {
             var postDetail = _postGetter.GetSinglePost(postId);
-
-            //if (postDetail == null)
-            //{
-            //    return NotFound();
-            //}
-
             return Ok(postDetail);
         }
 
-        //REMOVE A POST
         [HttpDelete("{postId}")]
         public IActionResult RemovePost(int postId)
         {
@@ -50,19 +46,17 @@ namespace BlogProjectRefactor.Controllers
             return Ok(removedPost);
         }
 
-        //CREATE NEW POST
         [HttpPost]
-        public IActionResult AddPost([FromBody] AddPostDto postDto)
+        public IActionResult AddPost([FromBody] AddPostDto addPostDto)
         {
-            var addPost = _postAdder.AddPost(postDto);
+            var addPost = _postAdder.AddPost(addPostDto);
             return Ok(addPost);
         }
 
-        //UPDATE A POST
         [HttpPut("{postId}")]
-        public IActionResult UpdatePost(int postId, [FromBody] UpdatePostDto postDto)
+        public IActionResult UpdatePost(int postId, [FromBody] UpdatePostDto updatePostDto)
         {
-            var updatePost = _postUpdater.UpdatePost(postId, postDto);
+            var updatePost = _postUpdater.UpdatePost(postId, updatePostDto);
             return Ok(updatePost);
         }
     }

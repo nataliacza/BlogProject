@@ -14,7 +14,7 @@ namespace BlogProject.Services.Posts
             _dbContext = dbContext;
         }
 
-        public UpdatePostDto UpdatePost(int postId, UpdatePostDto postDto)
+        public PostDto UpdatePost(int postId, UpdatePostDto updatePostDto)
         {
             var existingPost = _dbContext.Posts.FirstOrDefault(x => x.Id == postId);
 
@@ -23,20 +23,20 @@ namespace BlogProject.Services.Posts
                 return null;
             }
 
-            UpdatePostDto updatedDetails = new UpdatePostDto
-            {
-                Title = postDto.Title,
-                Content = postDto.Content,
-            };
-
-            existingPost.Title = postDto.Title;
-            existingPost.Content = postDto.Content;
+            existingPost.Title = updatePostDto.Title;
+            existingPost.Content = updatePostDto.Content;
 
             _dbContext.Posts.Update(existingPost);
             _dbContext.SaveChanges();
 
-            return updatedDetails;
-
+            return new PostDto
+            {
+                Id = existingPost.Id,
+                Title = existingPost.Title,
+                Content = existingPost.Content,
+                Author = existingPost.Author,
+                CreatedDate = existingPost.CreatedDate,
+            };
         }
     }
 }

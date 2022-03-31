@@ -40,12 +40,17 @@ namespace BlogProjectRefactor.Controllers
         public async Task<IActionResult> GetPostDetail(int postId)
         {
             var postDetail = await _postGetter.GetSinglePost(postId);
-
-            if (postDetail is null)
-            {
-                return NotFound();
-            }
             
+            if (postId == 666)
+            {
+                return StatusCode(418, "OMG! I'm a teapot!");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             return Ok(postDetail);
         }
 
@@ -56,7 +61,7 @@ namespace BlogProjectRefactor.Controllers
 
             if (removedPost is null)
             {
-                return NotFound();
+                return NotFound($"Post ID {postId} not found!");
             }
 
             return Ok(removedPost);
@@ -65,15 +70,26 @@ namespace BlogProjectRefactor.Controllers
         [HttpPost]
         public async Task<IActionResult> AddPost([FromBody] AddPostDto addPostDto)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             var addPost = await _postAdder.AddPost(addPostDto);
-            string resourceCreated = "Resource created!";
-            return Created(resourceCreated, addPostDto);
+
+            return Created("NewItem", addPost);
         }
 
         [HttpPut("{postId}")]
         public async Task<IActionResult> UpdatePost(int postId, [FromBody] UpdatePostDto updatePostDto)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             var updatePost = await _postUpdater.UpdatePost(postId, updatePostDto);
+
             return Ok(updatePost);
         }
     }

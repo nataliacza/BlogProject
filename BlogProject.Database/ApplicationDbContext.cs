@@ -9,6 +9,19 @@ namespace BlogProject.Database
         {
 
         }
+
         public DbSet<Post> Posts { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Post>()
+                .Property(t => t.Title)
+                .IsRequired()
+                .HasMaxLength(50);
+
+            modelBuilder.Entity<Post>()
+                .Property(c => c.Content)
+                .HasMaxLength(1000);
+        }
     }
 }

@@ -28,9 +28,9 @@ namespace BlogProject.Services.Posts
             return allMappedPosts;
         }
 
-        public PostDto GetSinglePost(int postId)
+        public async Task<PostDto> GetSinglePost(int postId)
         {
-            var getSinglePost = _dbContext.Posts.FirstOrDefault(x => x.Id == postId);
+            var getSinglePost = await _dbContext.Posts.FirstOrDefaultAsync(x => x.Id == postId);
 
             if (getSinglePost == null)
             {

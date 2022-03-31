@@ -2,7 +2,7 @@
 using BlogProject.Database;
 using BlogProject.Dtos.Posts;
 using BlogProject.Services.Interfaces.Posts;
-
+using Microsoft.EntityFrameworkCore;
 
 namespace BlogProject.Services.Posts
 {
@@ -19,19 +19,19 @@ namespace BlogProject.Services.Posts
             _autoMapper = autoMapper;
         }
 
-        public PostDto RemovePost(int postId)
+        public async Task<PostDto> RemovePost(int postId)
         {
-            var singlePost = _dbContext.Posts.FirstOrDefault(x => x.Id == postId);
-
-            var removedMappedPost = _autoMapper.Map<PostDto>(singlePost);
+            var singlePost = await _dbContext.Posts.FirstOrDefaultAsync(x => x.Id == postId);
 
             if (singlePost == null)
             {
                 return null;
             }
-            
+
+            var removedMappedPost = _autoMapper.Map<PostDto>(singlePost);
+
             _dbContext.Posts.Remove(singlePost);
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
 
             return removedMappedPost;
         }

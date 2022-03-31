@@ -32,14 +32,14 @@ namespace BlogProjectRefactor.Controllers
         [HttpGet]
         public async Task<IActionResult> GetPost()
         {
-            var posts = await _postGetter.GetAllPosts();
-            return Ok(posts);
+            var allPosts = await _postGetter.GetAllPosts();
+            return Ok(allPosts);
         }
 
         [HttpGet("{postId}")]
-        public IActionResult GetPostDetail(int postId)
+        public async Task<IActionResult> GetPostDetail(int postId)
         {
-            var postDetail = _postGetter.GetSinglePost(postId);
+            var postDetail = await _postGetter.GetSinglePost(postId);
 
             if (postDetail is null)
             {
@@ -50,9 +50,9 @@ namespace BlogProjectRefactor.Controllers
         }
 
         [HttpDelete("{postId}")]
-        public IActionResult RemovePost(int postId)
+        public async Task<IActionResult> RemovePost(int postId)
         {
-            var removedPost = _postRemover.RemovePost(postId);
+            var removedPost = await _postRemover.RemovePost(postId);
 
             if (removedPost is null)
             {
@@ -63,17 +63,17 @@ namespace BlogProjectRefactor.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddPost([FromBody] AddPostDto addPostDto)
+        public async Task<IActionResult> AddPost([FromBody] AddPostDto addPostDto)
         {
-            var addPost = _postAdder.AddPost(addPostDto);
+            var addPost = await _postAdder.AddPost(addPostDto);
             string resourceCreated = "Resource created!";
             return Created(resourceCreated, addPostDto);
         }
 
         [HttpPut("{postId}")]
-        public IActionResult UpdatePost(int postId, [FromBody] UpdatePostDto updatePostDto)
+        public async Task<IActionResult> UpdatePost(int postId, [FromBody] UpdatePostDto updatePostDto)
         {
-            var updatePost = _postUpdater.UpdatePost(postId, updatePostDto);
+            var updatePost = await _postUpdater.UpdatePost(postId, updatePostDto);
             return Ok(updatePost);
         }
     }

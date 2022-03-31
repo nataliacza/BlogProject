@@ -2,7 +2,7 @@
 using BlogProject.Services.Interfaces.Posts;
 using BlogProject.Database;
 using BlogProject.Dtos.Posts;
-
+using Microsoft.EntityFrameworkCore;
 
 namespace BlogProject.Services.Posts
 {
@@ -20,9 +20,9 @@ namespace BlogProject.Services.Posts
             _autoMapper = autoMapper;
         }
 
-        public PostDto UpdatePost(int postId, UpdatePostDto updatePostDto)
+        public async Task<PostDto> UpdatePost(int postId, UpdatePostDto updatePostDto)
         {
-            var postFromDb = _dbContext.Posts.FirstOrDefault(x => x.Id == postId);
+            var postFromDb = await _dbContext.Posts.FirstOrDefaultAsync(x => x.Id == postId);
 
             if (postFromDb == null)
             {
@@ -32,7 +32,7 @@ namespace BlogProject.Services.Posts
             var mappedPost = _autoMapper.Map(updatePostDto, postFromDb);
 
             _dbContext.Posts.Update(postFromDb);
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
 
             var result = _autoMapper.Map<PostDto>(postFromDb);
 

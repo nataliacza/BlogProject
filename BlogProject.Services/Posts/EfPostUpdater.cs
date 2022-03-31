@@ -3,6 +3,7 @@ using BlogProject.Services.Interfaces.Posts;
 using BlogProject.Database;
 using BlogProject.Dtos.Posts;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Data.SqlClient;
 
 namespace BlogProject.Services.Posts
 {
@@ -32,6 +33,7 @@ namespace BlogProject.Services.Posts
             var mappedPost = _autoMapper.Map(updatePostDto, postFromDb);
 
             _dbContext.Posts.Update(postFromDb);
+            
             await _dbContext.SaveChangesAsync();
 
             var result = _autoMapper.Map<PostDto>(postFromDb);

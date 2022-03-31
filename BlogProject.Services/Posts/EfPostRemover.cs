@@ -19,13 +19,14 @@ namespace BlogProject.Services.Posts
             _autoMapper = autoMapper;
         }
 
-        public async Task<PostDto> RemovePost(int postId)
+        public async Task<PostDto> RemovePost(int? postId)
         {
             var singlePost = await _dbContext.Posts.FirstOrDefaultAsync(x => x.Id == postId);
 
             if (singlePost == null)
             {
-                return null;
+                string message = $"Post ID {postId} not found!";
+                throw new ArgumentNullException(message);
             }
 
             var removedMappedPost = _autoMapper.Map<PostDto>(singlePost);

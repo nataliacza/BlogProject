@@ -4,6 +4,6 @@ namespace BlogProject.Services.Interfaces.Posts
 {
     public interface IPostRemover
     {
-        Task<PostDto> RemovePost(int postId);
+        Task<PostDto> RemovePost(int? postId);
     }
 }

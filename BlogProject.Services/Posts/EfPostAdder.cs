@@ -19,7 +19,7 @@ namespace BlogProject.Services.Posts
             _autoMapper = autoMapper;
         }
 
-        public PostDto AddPost(AddPostDto addPostDto)
+        public async Task<PostDto> AddPost(AddPostDto addPostDto)
         {
             var newPost = _autoMapper.Map<Post>(addPostDto);
 
@@ -29,7 +29,7 @@ namespace BlogProject.Services.Posts
             }
 
             _dbContext.Posts.Add(newPost);
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
 
             var newPostMapped = _autoMapper.Map<PostDto>(newPost);
 

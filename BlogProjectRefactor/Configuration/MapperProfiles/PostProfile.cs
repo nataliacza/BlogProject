@@ -3,20 +3,19 @@ using BlogProject.Database.Models;
 using BlogProject.Dtos.Posts;
 
 
-namespace BlogProjectRefactor.Configuration.MapperProfiles
+namespace BlogProjectRefactor.Configuration.MapperProfiles;
+
+public class PostProfile : Profile
 {
-    public class PostProfile : Profile
+    public PostProfile()
     {
-        public PostProfile()
-        {
-            CreateMap<Post, AddPostDto>();
-            CreateMap<AddPostDto, Post>();
+        CreateMap<Post, AddPostDto>();
+        CreateMap<AddPostDto, Post>();
 
-            CreateMap<Post, PostDto>();
-            CreateMap<PostDto, Post>();
+        CreateMap<Post, PostDto>();
+        CreateMap<PostDto, Post>();
 
-            CreateMap<Post, UpdatePostDto>();
-            CreateMap<UpdatePostDto, Post>();
-        }
+        CreateMap<Post, UpdatePostDto>();
+        CreateMap<UpdatePostDto, Post>();
     }
 }

@@ -1,9 +1,8 @@
 ﻿using BlogProject.Dtos.Posts;
 
-namespace BlogProject.Services.Interfaces.Posts
+namespace BlogProject.Services.Interfaces.Posts;
+
+public interface IPostRemover
 {
-    public interface IPostRemover
-    {
-        Task<PostDto> RemovePost(int? postId);
-    }
+    Task<PostDto> RemovePost(int postId);
 }

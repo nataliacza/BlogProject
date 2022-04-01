@@ -1,10 +1,9 @@
 ﻿using BlogProject.Dtos.Posts;
 
-namespace BlogProject.Services.Interfaces.Posts
+namespace BlogProject.Services.Interfaces.Posts;
+
+public interface IPostGetter
 {
-    public interface IPostGetter
-    {
-        Task<IEnumerable<PostDto>> GetAllPosts();
-        Task<PostDto> GetSinglePost(int postId);
-    }
+    Task<IEnumerable<PostDto>> GetAllPosts();
+    Task<PostDto> GetSinglePost(int? postId);
 }

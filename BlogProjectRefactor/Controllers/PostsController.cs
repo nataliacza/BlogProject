@@ -1,96 +1,87 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using BlogProject.Dtos.Posts;
 using BlogProject.Services.Interfaces.Posts;
 
 
-namespace BlogProjectRefactor.Controllers
+namespace BlogProjectRefactor.Controllers;
+
+[Route("api/posts")]
+public class PostsContoller : ControllerBase
 {
-    [Route("api/posts")]
-    public class PostsContoller : ControllerBase
+    private readonly IPostGetter _postGetter;
+    private readonly IPostAdder _postAdder;
+    private readonly IPostRemover _postRemover;
+    private readonly IPostUpdater _postUpdater;
+    
+    public PostsContoller(
+        IPostGetter postGetter,
+        IPostAdder postAdder, 
+        IPostRemover postRemover, 
+        IPostUpdater postUpdater)
     {
-        private readonly IPostGetter _postGetter;
-        private readonly IPostAdder _postAdder;
-        private readonly IPostRemover _postRemover;
-        private readonly IPostUpdater _postUpdater;
-        
-        public PostsContoller(
-            IPostGetter postGetter,
-            IPostAdder postAdder, 
-            IPostRemover postRemover, 
-            IPostUpdater postUpdater)
+        _postGetter = postGetter;
+        _postAdder = postAdder;
+        _postRemover = postRemover;
+        _postUpdater = postUpdater;
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetPost()
+    {
+        var allPosts = await _postGetter.GetAllPosts();
+        return Ok(allPosts);
+    }
+
+    [HttpGet("{postId}")]
+    public async Task<IActionResult> GetPostDetail([FromRoute] int? postId)
+    {
+        var postDetail = await _postGetter.GetSinglePost(postId);
+
+        if (postId == 666)
         {
-            _postGetter = postGetter;
-            _postAdder = postAdder;
-            _postRemover = postRemover;
-            _postUpdater = postUpdater;
+            return StatusCode(418, "OMG! I'm a teapot!");
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetPost()
+        return Ok(postDetail);
+    }
+
+    [HttpDelete("{postId}")]
+    public async Task<IActionResult> RemovePost([FromRoute] int postId)
+    {
+        var removePost = await _postRemover.RemovePost(postId);
+
+        if (removePost == null)
         {
-            var allPosts = await _postGetter.GetAllPosts();
-            return Ok(allPosts);
+            return NotFound($"Post ID {postId} not found!");
         }
 
-        [HttpGet("{postId}")]
-        public async Task<IActionResult> GetPostDetail(int postId)
+        return Ok(removePost);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> AddPost([FromBody] AddPostDto addPostDto)
+    {
+        if (!ModelState.IsValid)
         {
-            var postDetail = await _postGetter.GetSinglePost(postId);
-            
-            if (postId == 666)
-            {
-                return StatusCode(418, "OMG! I'm a teapot!");
-            }
-
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            return Ok(postDetail);
+            return BadRequest(ModelState);
         }
 
-        [HttpDelete("{postId}")]
-        public async Task<IActionResult> RemovePost(int postId)
+        var addedPost = await _postAdder.AddPost(addPostDto);
+
+        return Created($"api/posts/{addedPost.Id}", addedPost);
+    }
+
+    [HttpPut("{postId}")]
+    public async Task<IActionResult> UpdatePost([FromRoute] int postId, [FromBody] UpdatePostDto updatePostDto)
+    {
+        if (!ModelState.IsValid)
         {
-            var removedPost = await _postRemover.RemovePost(postId);
-
-            if (removedPost is null)
-            {
-                return NotFound($"Post ID {postId} not found!");
-            }
-
-            return Ok(removedPost);
+            return BadRequest(ModelState);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> AddPost([FromBody] AddPostDto addPostDto)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+        var updatedPost = await _postUpdater.UpdatePost(postId, updatePostDto);
 
-            var addPost = await _postAdder.AddPost(addPostDto);
-
-            return Created("NewItem", addPost);
-        }
-
-        [HttpPut("{postId}")]
-        public async Task<IActionResult> UpdatePost(int postId, [FromBody] UpdatePostDto updatePostDto)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var updatePost = await _postUpdater.UpdatePost(postId, updatePostDto);
-
-            return Ok(updatePost);
-        }
+        return Ok(updatedPost);
     }
 }

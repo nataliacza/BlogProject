@@ -3,39 +3,37 @@ using BlogProject.Services.Interfaces.Posts;
 using BlogProject.Database;
 using BlogProject.Dtos.Posts;
 using BlogProject.Database.Models;
-using Microsoft.EntityFrameworkCore;
 
-namespace BlogProject.Services.Posts
+namespace BlogProject.Services.Posts;
+
+public class EfPostAdder : IPostAdder
 {
-    public class EfPostAdder : IPostAdder
+    private readonly ApplicationDbContext _dbContext;
+    private readonly IMapper _autoMapper;
+
+    public EfPostAdder(
+        ApplicationDbContext dbContext,
+        IMapper autoMapper)
     {
-        private readonly ApplicationDbContext _dbContext;
-        private readonly IMapper _autoMapper;
+        _dbContext = dbContext;
+        _autoMapper = autoMapper;
+    }
 
-        public EfPostAdder(
-            ApplicationDbContext dbContext,
-            IMapper autoMapper)
+    public async Task<PostDto> AddPost(AddPostDto addPostDto)
+    {
+        var newPost = _autoMapper.Map<Post>(addPostDto);
+
+        if (newPost == null)
         {
-            _dbContext = dbContext;
-            _autoMapper = autoMapper;
+            return null;
         }
 
-        public async Task<PostDto> AddPost(AddPostDto addPostDto)
-        {
-            var newPost = _autoMapper.Map<Post>(addPostDto);
+        _dbContext.Posts.Add(newPost);
 
-            if (newPost == null)
-            {
-                return null;
-            }
+        await _dbContext.SaveChangesAsync();
 
-            _dbContext.Posts.Add(newPost);
+        var newPostMapped = _autoMapper.Map<PostDto>(newPost);
 
-            await _dbContext.SaveChangesAsync();
-
-            var newPostMapped = _autoMapper.Map<PostDto>(newPost);
-
-            return newPostMapped;
-        }
+        return newPostMapped;
     }
 }

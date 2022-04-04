@@ -1,6 +1,5 @@
-using System;
 
-namespace BlogProjectRefactor.Models
+namespace BlogProject.Web.Models
 {
     public class ErrorViewModel
     {

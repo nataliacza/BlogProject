@@ -4,5 +4,5 @@ namespace BlogProject.Services.Interfaces.Posts;
 
 public interface IPostUpdater
 {
-    Task<PostDto> UpdatePost(int id, UpdatePostDto postDto);
+    Task<PostDto?> UpdatePost(int? postId, UpdatePostDto postDto);
 }

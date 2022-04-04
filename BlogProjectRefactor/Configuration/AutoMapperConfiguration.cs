@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
-using BlogProjectRefactor.Configuration.MapperProfiles;
+using BlogProject.Web.Configuration.MapperProfiles;
 using Microsoft.Extensions.DependencyInjection;
 
 
-namespace BlogProjectRefactor.Configuration;
+namespace BlogProject.Web.Configuration;
 
 public static class AutomapperConfiguration
 {

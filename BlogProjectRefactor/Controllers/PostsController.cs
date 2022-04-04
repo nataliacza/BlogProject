@@ -2,9 +2,11 @@
 using Microsoft.AspNetCore.Mvc;
 using BlogProject.Dtos.Posts;
 using BlogProject.Services.Interfaces.Posts;
+using System.Linq;
+using System.Collections.ObjectModel;
+using System.Collections.Generic;
 
-
-namespace BlogProjectRefactor.Controllers;
+namespace BlogProject.Web.Controllers;
 
 [Route("api/posts")]
 public class PostsContoller : ControllerBase
@@ -30,6 +32,14 @@ public class PostsContoller : ControllerBase
     public async Task<IActionResult> GetPost()
     {
         var allPosts = await _postGetter.GetAllPosts();
+
+        IEnumerable<string> empty = Enumerable.Empty<string>();
+
+        if (allPosts == empty)
+        {
+            return NoContent();
+        }
+
         return Ok(allPosts);
     }
 
@@ -43,11 +53,16 @@ public class PostsContoller : ControllerBase
             return StatusCode(418, "OMG! I'm a teapot!");
         }
 
+        if (postDetail == null)
+        {
+            return NoContent();
+        }
+
         return Ok(postDetail);
     }
 
     [HttpDelete("{postId}")]
-    public async Task<IActionResult> RemovePost([FromRoute] int postId)
+    public async Task<IActionResult> RemovePost([FromRoute] int? postId)
     {
         var removePost = await _postRemover.RemovePost(postId);
 
@@ -73,11 +88,16 @@ public class PostsContoller : ControllerBase
     }
 
     [HttpPut("{postId}")]
-    public async Task<IActionResult> UpdatePost([FromRoute] int postId, [FromBody] UpdatePostDto updatePostDto)
+    public async Task<IActionResult> UpdatePost([FromRoute] int? postId, [FromBody] UpdatePostDto updatePostDto)
     {
         if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
+        }
+
+        if (!postId.HasValue) 
+        { 
+            return BadRequest(ModelState); 
         }
 
         var updatedPost = await _postUpdater.UpdatePost(postId, updatePostDto);

@@ -5,5 +5,5 @@ namespace BlogProject.Services.Interfaces.Posts;
 public interface IPostGetter
 {
     Task<IEnumerable<PostDto>> GetAllPosts();
-    Task<PostDto> GetSinglePost(int? postId);
+    Task<PostDto?> GetSinglePost(int? postId);
 }

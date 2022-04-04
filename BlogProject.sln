@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32210.238
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlogProjectRefactor", "BlogProjectRefactor\BlogProjectRefactor.csproj", "{BD4C6C74-5D61-4EF0-BE92-63F29A098481}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlogProject.Web", "BlogProjectRefactor\BlogProject.Web.csproj", "{BD4C6C74-5D61-4EF0-BE92-63F29A098481}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlogProject.Services", "BlogProject.Services\BlogProject.Services.csproj", "{0C052A13-8AFC-4727-B440-7AB4CBCB1AA5}"
 EndProject

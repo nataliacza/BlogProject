@@ -4,6 +4,7 @@ using BlogProject.Database;
 using BlogProject.Dtos.Posts;
 using Microsoft.EntityFrameworkCore;
 
+
 namespace BlogProject.Services.Posts;
 
 public class EfPostUpdater : IPostUpdater
@@ -20,7 +21,7 @@ public class EfPostUpdater : IPostUpdater
         _autoMapper = autoMapper;
     }
 
-    public async Task<PostDto> UpdatePost(int postId, UpdatePostDto updatePostDto)
+    public async Task<PostDto?> UpdatePost(int? postId, UpdatePostDto updatePostDto)
     {
         var postFromDb = await _dbContext.Posts.FirstOrDefaultAsync(x => x.Id == postId);
 

@@ -4,6 +4,7 @@ using BlogProject.Dtos.Posts;
 using BlogProject.Services.Interfaces.Posts;
 using Microsoft.EntityFrameworkCore;
 
+
 namespace BlogProject.Services.Posts;
 
 public class EfPostRemover: IPostRemover
@@ -19,14 +20,13 @@ public class EfPostRemover: IPostRemover
         _autoMapper = autoMapper;
     }
 
-    public async Task<PostDto> RemovePost(int postId)
+    public async Task<PostDto?> RemovePost(int? postId)
     {
         var singlePost = await _dbContext.Posts.FirstOrDefaultAsync(x => x.Id == postId);
 
         if (singlePost == null)
         {
-            string message = $"Post ID {postId} not found!";
-            throw new ArgumentNullException(message);
+            return null;
         }
 
         var removedMappedPost = _autoMapper.Map<PostDto>(singlePost);

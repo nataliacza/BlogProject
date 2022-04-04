@@ -4,8 +4,8 @@ using BlogProject.Database;
 using BlogProject.Dtos.Posts;
 using Microsoft.EntityFrameworkCore;
 
-namespace BlogProject.Services.Posts;
 
+namespace BlogProject.Services.Posts;
 
 public class EfPostGetter: IPostGetter
 {
@@ -29,7 +29,7 @@ public class EfPostGetter: IPostGetter
         return allMappedPosts;
     }
 
-    public async Task<PostDto> GetSinglePost(int? postId)
+    public async Task<PostDto?> GetSinglePost(int? postId)
     {
         var getSinglePost = await _dbContext.Posts.FirstOrDefaultAsync(x => x.Id == postId);
 
@@ -43,4 +43,3 @@ public class EfPostGetter: IPostGetter
         return singleMappedPost;
     }
 }
-

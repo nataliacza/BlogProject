@@ -3,7 +3,7 @@ using BlogProject.Database.Models;
 using BlogProject.Dtos.Posts;
 
 
-namespace BlogProjectRefactor.Configuration.MapperProfiles;
+namespace BlogProject.Web.Configuration.MapperProfiles;
 
 public class PostProfile : Profile
 {

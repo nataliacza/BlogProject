@@ -2,7 +2,7 @@
 using BlogProject.Services.Posts;
 using BlogProject.Services.Interfaces.Posts;
 
-namespace BlogProjectRefactor.Configuration;
+namespace BlogProject.Web.Configuration;
 
 public static class ServicesConfiguration
 {

@@ -1,9 +1,9 @@
-﻿using BlogProjectRefactor.Models;
+﻿using BlogProject.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 
-namespace BlogProjectRefactor.Controllers;
+namespace BlogProject.Web.Controllers;
 
 public class HomeController : Controller
 {

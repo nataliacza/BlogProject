@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
+
 namespace BlogProject.Database.Models;
 
 public class Post

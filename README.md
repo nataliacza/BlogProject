@@ -1,2 +1,2 @@
 BlogProject
-ASP.NET | N-TIER | DTOs
+ASP.NET Core 6 | N-TIER | DTOs | Authentication | JWT

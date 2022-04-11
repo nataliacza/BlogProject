@@ -6,5 +6,5 @@ namespace BlogProject.Services.Interfaces.Accounts;
 
 public interface IUserLogin
 {
-    Task<JwtSecurityToken?> Login(UserLoginDto userDetails);
+    Task<string?> Login(UserLoginDto userDetails);
 }

@@ -1,5 +1,6 @@
 ﻿using BlogProject.Dtos.Accounts;
 using BlogProject.Services.Interfaces.Accounts;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
 using System.Threading.Tasks;
@@ -34,13 +35,12 @@ public class AccountController : ControllerBase
 
         if (response == null)
         {
-            return BadRequest($"Invalid username or PW");
+            return BadRequest("Invalid username or password");
         }
 
         return Ok(new
         {
-            token = new JwtSecurityTokenHandler().WriteToken(response),
-            expiration = response.ValidTo
+            token = response
         });
     }
 
@@ -54,18 +54,22 @@ public class AccountController : ControllerBase
     [Route("register")]
     public async Task<IActionResult> Register([FromBody] UserRegistrationDto userDetails)
     {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
 
         var response = await _userRegister.Register(userDetails);
 
         if (response == null)
         {
-            return BadRequest("Error!");
+            return BadRequest("Registration failed!");
         }
 
         return Ok(new
         {
-            token = new JwtSecurityTokenHandler().WriteToken(response),
-            expiration = response.ValidTo
-        });
+            message = "User registered!",
+            details = response
+        });  
     }
 }

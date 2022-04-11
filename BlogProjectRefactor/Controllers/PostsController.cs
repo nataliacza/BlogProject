@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace BlogProject.Web.Controllers;
 
-[Authorize]
+
 [Route("api/posts")]
 public class PostsContoller : ControllerBase
 {
@@ -29,7 +29,6 @@ public class PostsContoller : ControllerBase
     }
 
     [HttpGet]
-    //[Authorize]
     public async Task<IActionResult> GetPost()
     {
         var allPosts = await _postGetter.GetAllPosts();
@@ -43,6 +42,7 @@ public class PostsContoller : ControllerBase
     }
 
     [HttpGet("{postId}")]
+    [Authorize]
     public async Task<IActionResult> GetPostDetail([FromRoute] int? postId)
     {
         var postDetail = await _postGetter.GetSinglePost(postId);
@@ -58,9 +58,11 @@ public class PostsContoller : ControllerBase
         }
 
         return Ok(postDetail);
+        
     }
 
     [HttpDelete("{postId}")]
+    [Authorize]
     public async Task<IActionResult> RemovePost([FromRoute] int? postId)
     {
         var removePost = await _postRemover.RemovePost(postId);
@@ -74,6 +76,7 @@ public class PostsContoller : ControllerBase
     }
 
     [HttpPost]
+    [Authorize]
     public async Task<IActionResult> AddPost([FromBody] AddPostDto addPostDto)
     {
         if (!ModelState.IsValid)
@@ -87,6 +90,7 @@ public class PostsContoller : ControllerBase
     }
 
     [HttpPut("{postId}")]
+    [Authorize]
     public async Task<IActionResult> UpdatePost([FromRoute] int? postId, [FromBody] UpdatePostDto updatePostDto)
     {
         if (!ModelState.IsValid)

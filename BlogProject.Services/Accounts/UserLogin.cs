@@ -1,8 +1,6 @@
 ﻿using BlogProject.Dtos.Accounts;
 using BlogProject.Services.Interfaces.Accounts;
 using Microsoft.AspNetCore.Identity;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 
 
 namespace BlogProject.Services.Accounts;
@@ -10,17 +8,20 @@ namespace BlogProject.Services.Accounts;
 public class UserLogin : IUserLogin
 {
     private readonly UserManager<IdentityUser> _userManager;
-    private readonly JwtToken _jwtToken;
+    private readonly IUserClaims _userClaims;
+    private readonly ITokenGenerator _jwtToken;
 
     public UserLogin(
         UserManager<IdentityUser> userManager,
-        JwtToken jwtToken)
+        IUserClaims userClaims,
+        ITokenGenerator jwtToken)
     {
         _userManager = userManager;
+        _userClaims = userClaims;
         _jwtToken = jwtToken;
     }
 
-    public async Task<JwtSecurityToken?> Login(UserLoginDto userDetails)
+    public async Task<string?> Login(UserLoginDto userDetails)
     {
         var user = await _userManager.FindByNameAsync(userDetails.Username);
 
@@ -31,16 +32,9 @@ public class UserLogin : IUserLogin
             return null;
         }
 
-        var authClaims = new List<Claim>
-            {
-                //new Claim(JwtRegisteredClaimNames.Name, user.UserName),
-                new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
-                new Claim(JwtRegisteredClaimNames.NameId, user.Id),
-                new Claim(JwtRegisteredClaimNames.Email, user.Email),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-            };
+        var authClaims = _userClaims.UserClaims(user);
 
-        var token = _jwtToken.GetToken(authClaims);
+        var token = _jwtToken.GenerateToken(authClaims);
 
         return token;
     }

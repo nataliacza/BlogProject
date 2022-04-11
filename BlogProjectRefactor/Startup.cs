@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using BlogProject.Services.Configuration;
 
 namespace BlogProject.Web;
 
@@ -22,15 +23,17 @@ public class Startup
         _configuration = configuration;
     }
 
-    //public IConfiguration Configuration { get; }
-
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
+        var jwtSecret = services.Configure<JwtConfiguration>(options => _configuration.GetSection("Jwt").Bind(options));
+        //var connectionString = services.Configure<ConnectionStringsConfiguration>(options => _configuration.GetSection("DefaultConnection").Bind(options));
+
         var connectionString = _configuration.GetConnectionString("DefaultConnection");
+        
 
         services.AddDbContext<ApplicationDbContext>(options =>
-        options.UseSqlServer(connectionString));
+                    options.UseSqlServer(connectionString));
 
         services.AddAutomapper();
         services.AddServices();
@@ -49,13 +52,19 @@ public class Startup
             })
             .AddJwtBearer(options =>
             {
-                options.SaveToken = true;
+                options.SaveToken = false;
                 options.RequireHttpsMetadata = false;
                 options.TokenValidationParameters = new TokenValidationParameters()
                 {
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]))
-                    //IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration.GetSection("JWT:Secret").Value)),
+                    //IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"])),
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret.ToString())),
+                    ValidateIssuerSigningKey = true,
+                    ValidateLifetime = true,
+                    ValidateAudience = false,
+                    ValidateIssuer = false,
                 };
+
+                //ValidateIssuerSigningKey =  If IssuerSigningKeyValidator is set, it will be called                                      regardless of whether this property is true or false. The  default is false.
             });
 
         services.AddControllersWithViews();

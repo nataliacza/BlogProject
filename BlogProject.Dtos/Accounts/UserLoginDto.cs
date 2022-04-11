@@ -5,9 +5,9 @@ namespace BlogProject.Dtos.Accounts;
 
 public class UserLoginDto
 {
-    [Required]
-    public string? Username { get; set; }
+    [Required(ErrorMessage = "User Name is required")]
+    public string Username { get; set; }
 
-    [Required]
-    public string? Password { get; set; }
+    [Required(ErrorMessage = "Password is required")]
+    public string Password { get; set; }
 }

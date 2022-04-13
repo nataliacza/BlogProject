@@ -12,6 +12,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using BlogProject.Services.Configuration;
 
+
 namespace BlogProject.Web;
 
 public class Startup
@@ -23,17 +24,16 @@ public class Startup
         _configuration = configuration;
     }
 
+
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
-        var jwtSecret = services.Configure<JwtConfiguration>(options => _configuration.GetSection("Jwt").Bind(options));
-        //var connectionString = services.Configure<ConnectionStringsConfiguration>(options => _configuration.GetSection("DefaultConnection").Bind(options));
+        services.Configure<JwtConfiguration>(options => _configuration.GetSection("Jwt").Bind(options));
 
         var connectionString = _configuration.GetConnectionString("DefaultConnection");
-        
 
         services.AddDbContext<ApplicationDbContext>(options =>
-                    options.UseSqlServer(connectionString));
+                    options.UseSqlServer(connectionString.ToString()));
 
         services.AddAutomapper();
         services.AddServices();
@@ -56,8 +56,7 @@ public class Startup
                 options.RequireHttpsMetadata = false;
                 options.TokenValidationParameters = new TokenValidationParameters()
                 {
-                    //IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"])),
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret.ToString())),
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"])),
                     ValidateIssuerSigningKey = true,
                     ValidateLifetime = true,
                     ValidateAudience = false,

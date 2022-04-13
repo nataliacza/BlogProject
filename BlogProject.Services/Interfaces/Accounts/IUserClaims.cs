@@ -1,5 +1,4 @@
-﻿using BlogProject.Dtos.Accounts;
-using Microsoft.AspNetCore.Identity;
+﻿using BlogProject.Database.Models;
 using System.Security.Claims;
 
 
@@ -7,5 +6,5 @@ namespace BlogProject.Services.Interfaces.Accounts;
 
 public interface IUserClaims
 {
-    List<Claim> UserClaims(IdentityUser user);
+    List<Claim> UserClaims(ApplicationUser user);
 }

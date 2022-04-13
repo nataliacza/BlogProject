@@ -1,4 +1,5 @@
-﻿using BlogProject.Services.Configuration;
+﻿using BlogProject.Database.Models;
+using BlogProject.Services.Configuration;
 using BlogProject.Services.Interfaces.Accounts;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
@@ -26,12 +27,14 @@ public class GenerateJwtToken : ITokenGenerator, IUserClaims
         _jwtSettings = jwtSettings.Value;
     }
 
-    public List<Claim> UserClaims(IdentityUser user)
+    public List<Claim> UserClaims(ApplicationUser user)
     {
         var authClaims = new List<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
                 new Claim(JwtRegisteredClaimNames.NameId, user.Id),
+                new Claim(JwtRegisteredClaimNames.GivenName , user.FirstName),
+                new Claim(JwtRegisteredClaimNames.FamilyName , user.LastName),
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()
                 )

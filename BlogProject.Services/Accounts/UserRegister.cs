@@ -9,10 +9,10 @@ namespace BlogProject.Services.Accounts;
 
 public class UserRegister : IUserRegister
 {
-    private readonly UserManager<IdentityUser> _userManager;
+    private readonly UserManager<ApplicationUser> _userManager;
     
     public UserRegister(
-        UserManager<IdentityUser> userManager
+        UserManager<ApplicationUser> userManager
        )
     {
         _userManager = userManager;

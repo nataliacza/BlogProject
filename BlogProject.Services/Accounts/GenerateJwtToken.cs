@@ -1,8 +1,6 @@
-﻿using BlogProject.Dtos.Accounts;
-using BlogProject.Services.Configuration;
+﻿using BlogProject.Services.Configuration;
 using BlogProject.Services.Interfaces.Accounts;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -20,7 +18,6 @@ namespace BlogProject.Services.Accounts;
 
 public class GenerateJwtToken : ITokenGenerator, IUserClaims
 {
-    //private readonly IConfiguration _configuration;
     private readonly JwtConfiguration _jwtSettings;
 
     public GenerateJwtToken(
@@ -58,7 +55,7 @@ public class GenerateJwtToken : ITokenGenerator, IUserClaims
             audience: null,
             claims: authClaims,
             notBefore: DateTime.UtcNow,
-            expires: DateTime.UtcNow.AddSeconds(double.Parse(_jwtSettings.ExpirationTime.ToString())),
+            expires: DateTime.UtcNow.AddSeconds(_jwtSettings.ExpirationTime),
             issuedAt: DateTime.UtcNow);
 
         var securityToken = new JwtSecurityToken(header, playload);

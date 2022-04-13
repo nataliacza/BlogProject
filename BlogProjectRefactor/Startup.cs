@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using BlogProject.Services.Configuration;
-
+using BlogProject.Database.Models;
 
 namespace BlogProject.Web;
 
@@ -38,7 +38,7 @@ public class Startup
         services.AddAutomapper();
         services.AddServices();
 
-        services.AddIdentity<IdentityUser, IdentityRole>()
+        services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>() // it's for db using ef core
                 .AddDefaultTokenProviders();  // it's for jwt token
 

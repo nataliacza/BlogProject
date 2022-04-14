@@ -8,40 +8,19 @@ using System.Security.Claims;
 using System.Text;
 
 
-// TO DO
-// interface do jwt token generator - change name
-// add authClaims - add separate method
-// IOptions - configuration
-
-
 namespace BlogProject.Services.Accounts;
 
-public class GenerateJwtToken : ITokenGenerator, IUserClaims
+public class GenerateToken : ITokenGenerator
 {
     private readonly JwtConfiguration _jwtSettings;
 
-    public GenerateJwtToken(
+    public GenerateToken(
         IOptions<JwtConfiguration> jwtSettings)
     {
         _jwtSettings = jwtSettings.Value;
     }
 
-    public List<Claim> UserClaims(IdentityUser user)
-    {
-        var authClaims = new List<Claim>
-            {
-                new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
-                new Claim(JwtRegisteredClaimNames.NameId, user.Id),
-                new Claim(JwtRegisteredClaimNames.Email, user.Email),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()
-                )
-            };
-
-        return authClaims;
-    }
-
-
-    public string GenerateToken(List<Claim> authClaims)
+    public string GenerateJwtToken(IdentityUser user)
     {
         var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Secret));
 
@@ -50,16 +29,34 @@ public class GenerateJwtToken : ITokenGenerator, IUserClaims
 
         var header = new JwtHeader(signingCredentials);
 
+        var claims = GetJwtClaims(user);
+
+        var currentDate = DateTime.UtcNow;
+
         var playload = new JwtPayload(
             issuer: null,
             audience: null,
-            claims: authClaims,
-            notBefore: DateTime.UtcNow,
-            expires: DateTime.UtcNow.AddSeconds(_jwtSettings.ExpirationTime),
-            issuedAt: DateTime.UtcNow);
+            claims: claims,
+            notBefore: currentDate,
+            expires: currentDate.AddSeconds(_jwtSettings.ExpirationTime),
+            issuedAt: currentDate);
 
         var securityToken = new JwtSecurityToken(header, playload);
 
         return new JwtSecurityTokenHandler().WriteToken(securityToken);
+    }
+
+    private List<Claim> GetJwtClaims(IdentityUser user)
+    {
+        var claims = new List<Claim>
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
+                new Claim(JwtRegisteredClaimNames.NameId, user.Id),
+                new Claim(JwtRegisteredClaimNames.Email, user.Email),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()
+                )
+            };
+
+        return claims;
     }
 }

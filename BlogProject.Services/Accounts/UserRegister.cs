@@ -9,17 +9,12 @@ namespace BlogProject.Services.Accounts;
 public class UserRegister : IUserRegister
 {
     private readonly UserManager<IdentityUser> _userManager;
-    private readonly IUserClaims _userClaims;
-    private readonly ITokenGenerator _jwtToken;
 
     public UserRegister(
-        UserManager<IdentityUser> userManager,
-        IUserClaims userClaims,
-        ITokenGenerator jwtToken)
+        UserManager<IdentityUser> userManager
+        )
     {
         _userManager = userManager;
-        _userClaims = userClaims;
-        _jwtToken = jwtToken;
     }
 
     public async Task<IdentityUser?> Register(UserRegistrationDto userDetails)

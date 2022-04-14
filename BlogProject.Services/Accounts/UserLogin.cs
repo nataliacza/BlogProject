@@ -8,16 +8,13 @@ namespace BlogProject.Services.Accounts;
 public class UserLogin : IUserLogin
 {
     private readonly UserManager<IdentityUser> _userManager;
-    private readonly IUserClaims _userClaims;
     private readonly ITokenGenerator _jwtToken;
 
     public UserLogin(
         UserManager<IdentityUser> userManager,
-        IUserClaims userClaims,
         ITokenGenerator jwtToken)
     {
         _userManager = userManager;
-        _userClaims = userClaims;
         _jwtToken = jwtToken;
     }
 
@@ -32,9 +29,7 @@ public class UserLogin : IUserLogin
             return null;
         }
 
-        var authClaims = _userClaims.UserClaims(user);
-
-        var token = _jwtToken.GenerateToken(authClaims);
+        var token = _jwtToken.GenerateJwtToken(user);
 
         return token;
     }

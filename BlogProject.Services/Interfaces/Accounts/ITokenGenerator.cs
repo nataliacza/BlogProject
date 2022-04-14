@@ -1,9 +1,9 @@
-﻿using System.Security.Claims;
+﻿using Microsoft.AspNetCore.Identity;
 
 
 namespace BlogProject.Services.Interfaces.Accounts;
 
 public interface ITokenGenerator
 {
-    public string GenerateToken(List<Claim> authClaims);
+    public string GenerateJwtToken(IdentityUser user);
 }

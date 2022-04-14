@@ -34,11 +34,11 @@ public class EfPostAdder : IPostAdder
     {
         var userId = GetUserIdFromClaims();
 
-        var getUser = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == userId);
+        var currentUser = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == userId);
 
         var newPost = _autoMapper.Map<Post>(addPostDto);
 
-        newPost.Author = getUser;
+        newPost.Author = currentUser;
 
         _dbContext.Posts.Add(newPost);
         await _dbContext.SaveChangesAsync();

@@ -1,18 +1,11 @@
 ﻿using BlogProject.Database.Models;
 using BlogProject.Services.Configuration;
 using BlogProject.Services.Interfaces.Accounts;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-
-
-// TO DO
-// interface do jwt token generator - change name
-// add authClaims - add separate method
-// IOptions - configuration
 
 
 namespace BlogProject.Services.Accounts;
@@ -31,8 +24,8 @@ public class GenerateJwtToken : ITokenGenerator, IUserClaims
     {
         var authClaims = new List<Claim>
             {
-                new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
-                new Claim(JwtRegisteredClaimNames.NameId, user.Id),
+                new Claim(JwtRegisteredClaimNames.Sub, user.Id),
+                new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName),
                 new Claim(JwtRegisteredClaimNames.GivenName , user.FirstName),
                 new Claim(JwtRegisteredClaimNames.FamilyName , user.LastName),
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),

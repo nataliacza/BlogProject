@@ -22,7 +22,9 @@ public class EfPostRemover: IPostRemover
 
     public async Task<PostDto?> RemovePost(int? postId)
     {
-        var singlePost = await _dbContext.Posts.FirstOrDefaultAsync(x => x.Id == postId);
+        var singlePost = await _dbContext.Posts
+            .Include(x => x.Author)
+            .FirstOrDefaultAsync(x => x.Id == postId);
 
         if (singlePost == null)
         {

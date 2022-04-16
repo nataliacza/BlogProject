@@ -13,6 +13,7 @@ using System.Text;
 using BlogProject.Services.Configuration;
 using BlogProject.Database.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Azure;
 
 namespace BlogProject.Web;
 
@@ -30,6 +31,7 @@ public class Startup
     public void ConfigureServices(IServiceCollection services)
     {
         services.Configure<JwtConfiguration>(options => _configuration.GetSection("Jwt").Bind(options));
+        services.Configure<AzureStorageConfiguration>(options => _configuration.GetSection("AzureStorage").Bind(options));
 
         var connectionString = _configuration.GetConnectionString("DefaultConnection");
 
@@ -44,6 +46,11 @@ public class Startup
                 .AddDefaultTokenProviders();  // it's for jwt token
 
         services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+        services.AddAzureClients(options =>
+        {
+            options.AddBlobServiceClient(_configuration["AzureStorage:ConnectionString"]);
+        });
 
         // Adding Authentication
         services

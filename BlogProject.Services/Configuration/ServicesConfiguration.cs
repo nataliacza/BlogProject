@@ -24,5 +24,6 @@ public static class ServicesConfiguration
         services.AddScoped<IUserClaims, GenerateJwtToken>();
 
         services.AddScoped<IStorageService, StorageService>();
+        services.AddScoped<IUploadFile, UploadFile>();
     }
 }

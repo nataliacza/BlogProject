@@ -1,4 +1,5 @@
 ﻿using Azure.Storage.Blobs;
+using BlogProject.Dtos.Uploads;
 using BlogProject.Services.Configuration;
 using BlogProject.Services.Interfaces.Uploads;
 using Microsoft.AspNetCore.Http;
@@ -13,19 +14,33 @@ public class StorageService : IStorageService
 
     public StorageService(
         BlobServiceClient blobServiceClient,
-        IOptions<AzureStorageConfiguration> blobSettings)
+        IOptions<AzureStorageConfiguration> blobSettings
+        )
     {
         _blobServiceClient = blobServiceClient;
         _blobSettings = blobSettings.Value;
     }
 
-    public void Upload(IFormFile formFile)
+    public async Task<FileDetailsDto?> UploadToBlobStorage(IFormFile formFile)
     {
         var containerName = _blobSettings.ContainerName;
         var containerClient = _blobServiceClient.GetBlobContainerClient(containerName);
-        var blobClient = containerClient.GetBlobClient(formFile.FileName);
 
-        using var stream = formFile.OpenReadStream();
-        blobClient.Upload(stream, true);
+        var fileInfo = new FileInfo(formFile.FileName);
+        string newFileName = Guid.NewGuid().ToString() + fileInfo.Extension;
+
+        var blobClient = containerClient.GetBlobClient(newFileName);
+
+        using var fileStream = formFile.OpenReadStream();
+
+        await blobClient.UploadAsync(fileStream, true);
+
+        FileDetailsDto fileDto = new FileDetailsDto
+        {
+            FileName = blobClient.Name,
+            FileUri = blobClient.Uri.ToString()
+        };
+
+        return fileDto;
     }
 }

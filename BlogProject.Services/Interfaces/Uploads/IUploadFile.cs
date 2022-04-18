@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace BlogProject.Services.Interfaces.Uploads;
 
-public interface IStorageService
+public interface IUploadFile
 {
-    public Task<FileDetailsDto?> UploadToBlobStorage(IFormFile formFile);
+    Task<FileDetailsDto?> Upload(IFormFile formFile);
 }

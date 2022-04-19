@@ -11,5 +11,4 @@ public class AddPostDto
     [MaxLength(1000)]
     public string Content { get; set; }
 
-    public string Author { get; set; }
 }

@@ -1,4 +1,5 @@
-﻿using BlogProject.Dtos.Accounts;
+﻿using BlogProject.Database.Models;
+using BlogProject.Dtos.Accounts;
 using BlogProject.Services.Interfaces.Accounts;
 using Microsoft.AspNetCore.Identity;
 
@@ -7,11 +8,11 @@ namespace BlogProject.Services.Accounts;
 
 public class UserLogin : IUserLogin
 {
-    private readonly UserManager<IdentityUser> _userManager;
+    private readonly UserManager<ApplicationUser> _userManager;
     private readonly ITokenGenerator _jwtToken;
 
     public UserLogin(
-        UserManager<IdentityUser> userManager,
+        UserManager<ApplicationUser> userManager,
         ITokenGenerator jwtToken)
     {
         _userManager = userManager;

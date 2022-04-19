@@ -1,9 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using BlogProject.Services.Posts;
 using BlogProject.Services.Accounts;
+using BlogProject.Services.Uploads;
 using BlogProject.Services.Interfaces.Posts;
 using BlogProject.Services.Interfaces.Accounts;
-
+using BlogProject.Services.Interfaces.Uploads;
 
 namespace BlogProject.Web.Configuration;
 
@@ -20,5 +21,7 @@ public static class ServicesConfiguration
         services.AddScoped<IUserRegister, UserRegister>();
 
         services.AddScoped<ITokenGenerator, JwtTokenGenerator>();
+        services.AddScoped<IStorageService, StorageService>();
+        services.AddScoped<IUploadFile, UploadFile>();
     }
 }

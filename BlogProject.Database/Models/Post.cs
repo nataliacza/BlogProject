@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 
 namespace BlogProject.Database.Models;
@@ -17,5 +18,9 @@ public class Post
 
     public DateTime CreatedDate { get; set; } = DateTime.Now;
 
-    public string Author { get; set; }
+
+    [ForeignKey("User")]
+    public string AuthorId { get; set; }
+    public virtual ApplicationUser Author { get; set; }
+
 }

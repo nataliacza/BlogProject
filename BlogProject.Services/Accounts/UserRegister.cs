@@ -1,4 +1,5 @@
-﻿using BlogProject.Dtos.Accounts;
+﻿using BlogProject.Database.Models;
+using BlogProject.Dtos.Accounts;
 using BlogProject.Services.Interfaces.Accounts;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -8,16 +9,16 @@ namespace BlogProject.Services.Accounts;
 
 public class UserRegister : IUserRegister
 {
-    private readonly UserManager<IdentityUser> _userManager;
-
+    private readonly UserManager<ApplicationUser> _userManager;
+    
     public UserRegister(
-        UserManager<IdentityUser> userManager
-        )
+        UserManager<ApplicationUser> userManager
+       )
     {
         _userManager = userManager;
     }
 
-    public async Task<IdentityUser?> Register(UserRegistrationDto userDetails)
+    public async Task<ApplicationUser?> Register(UserRegistrationDto userDetails)
 {
         var userExists = await _userManager.Users.AnyAsync(x => x.UserName == userDetails.Username);
 
@@ -26,11 +27,13 @@ public class UserRegister : IUserRegister
             return null;
         }
 
-        IdentityUser user = new()
+        ApplicationUser user = new()
         {
             Id = Guid.NewGuid().ToString(),
             Email = userDetails.Email,
-            UserName = userDetails.Username
+            UserName = userDetails.Username,
+            FirstName = userDetails.FirstName,
+            LastName = userDetails.LastName,
         };
 
         var result = await _userManager.CreateAsync(user, userDetails.Password);

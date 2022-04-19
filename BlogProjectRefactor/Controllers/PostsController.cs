@@ -3,11 +3,12 @@ using Microsoft.AspNetCore.Mvc;
 using BlogProject.Dtos.Posts;
 using BlogProject.Services.Interfaces.Posts;
 using System.Linq;
-using System.Collections.ObjectModel;
-using System.Collections.Generic;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BlogProject.Web.Controllers;
 
+
+[Authorize]
 [Route("api/posts")]
 public class PostsContoller : ControllerBase
 {
@@ -33,9 +34,7 @@ public class PostsContoller : ControllerBase
     {
         var allPosts = await _postGetter.GetAllPosts();
 
-        IEnumerable<string> empty = Enumerable.Empty<string>();
-
-        if (allPosts == empty)
+        if (!allPosts.Any())
         {
             return NoContent();
         }
@@ -59,6 +58,7 @@ public class PostsContoller : ControllerBase
         }
 
         return Ok(postDetail);
+        
     }
 
     [HttpDelete("{postId}")]

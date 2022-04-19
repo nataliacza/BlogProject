@@ -1,6 +1,6 @@
-﻿using BlogProject.Services.Configuration;
+﻿using BlogProject.Database.Models;
+using BlogProject.Services.Configuration;
 using BlogProject.Services.Interfaces.Accounts;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -20,7 +20,7 @@ public class JwtTokenGenerator : ITokenGenerator
         _jwtSettings = jwtSettings.Value;
     }
 
-    public string GenerateJwtToken(IdentityUser user)
+    public string GenerateJwtToken(ApplicationUser user)
     {
         var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Secret));
 
@@ -46,12 +46,14 @@ public class JwtTokenGenerator : ITokenGenerator
         return new JwtSecurityTokenHandler().WriteToken(securityToken);
     }
 
-    private List<Claim> GetJwtClaims(IdentityUser user)
+    private List<Claim> GetJwtClaims(ApplicationUser user)
     {
         var claims = new List<Claim>
             {
-                new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
-                new Claim(JwtRegisteredClaimNames.NameId, user.Id),
+                new Claim(JwtRegisteredClaimNames.Sub, user.Id),
+                new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName),
+                new Claim(JwtRegisteredClaimNames.GivenName , user.FirstName),
+                new Claim(JwtRegisteredClaimNames.FamilyName , user.LastName),
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()
                 )

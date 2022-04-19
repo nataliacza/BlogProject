@@ -23,7 +23,9 @@ public class EfPostUpdater : IPostUpdater
 
     public async Task<PostDto?> UpdatePost(int? postId, UpdatePostDto updatePostDto)
     {
-        var postFromDb = await _dbContext.Posts.FirstOrDefaultAsync(x => x.Id == postId);
+        var postFromDb = await _dbContext.Posts
+            .Include(x => x.Author)
+            .FirstOrDefaultAsync(x => x.Id == postId);
 
         if (postFromDb == null)
         {

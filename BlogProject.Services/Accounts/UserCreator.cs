@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BlogProject.Services.Accounts;
 
-public class UserRegister : IUserRegister
+public class UserCreator : IUserRegister
 {
     private readonly UserManager<ApplicationUser> _userManager;
     
-    public UserRegister(
+    public UserCreator(
         UserManager<ApplicationUser> userManager
         )
     {

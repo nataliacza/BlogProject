@@ -3,8 +3,7 @@ using BlogProject.Services.Interfaces.Posts;
 using BlogProject.Database;
 using BlogProject.Dtos.Posts;
 using BlogProject.Database.Models;
-using Microsoft.AspNetCore.Http;
-
+using BlogProject.Services.Interfaces.Accounts;
 
 namespace BlogProject.Services.Posts;
 
@@ -12,22 +11,22 @@ public class EfPostAdder : IPostAdder
 {
     private readonly ApplicationDbContext _dbContext;
     private readonly IMapper _autoMapper;
-    private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly IContextUserGetter _contextUserGetter;
 
     public EfPostAdder(
         ApplicationDbContext dbContext,
         IMapper autoMapper,
-        IHttpContextAccessor httpContextAccessor
+        IContextUserGetter contextUserGetter
         )
     {
         _dbContext = dbContext;
         _autoMapper = autoMapper;
-        _httpContextAccessor = httpContextAccessor;
+        _contextUserGetter = contextUserGetter;
     }
 
     public async Task<PostDto?> AddPost(AddPostDto addPostDto)
     {
-        var userId = GetUserIdFromClaims();
+        var userId = _contextUserGetter.GetUserId();
 
         var newPost = _autoMapper.Map<Post>(addPostDto);
 
@@ -40,11 +39,4 @@ public class EfPostAdder : IPostAdder
 
         return newPostMapped;
     }
-
-
-    private string GetUserIdFromClaims()
-    {
-        return _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(i => i.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier").Value;
-    }
-
 }

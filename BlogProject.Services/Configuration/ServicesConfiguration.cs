@@ -20,5 +20,6 @@ public static class ServicesConfiguration
         services.AddScoped<IUserRegister, UserCreator>();
 
         services.AddScoped<ITokenGenerator, JwtTokenGenerator>();
+        services.AddScoped<IContextUserGetter, UserGetter>();
     }
 }

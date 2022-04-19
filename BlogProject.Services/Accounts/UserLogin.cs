@@ -8,6 +8,7 @@ namespace BlogProject.Services.Accounts;
 
 public class UserLogin : IUserLogin
 {
+<<<<<<< HEAD
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IUserClaims _userClaims;
     private readonly ITokenGenerator _jwtToken;
@@ -15,10 +16,16 @@ public class UserLogin : IUserLogin
     public UserLogin(
         UserManager<ApplicationUser> userManager,
         IUserClaims userClaims,
+=======
+    private readonly UserManager<IdentityUser> _userManager;
+    private readonly ITokenGenerator _jwtToken;
+
+    public UserLogin(
+        UserManager<IdentityUser> userManager,
+>>>>>>> master
         ITokenGenerator jwtToken)
     {
         _userManager = userManager;
-        _userClaims = userClaims;
         _jwtToken = jwtToken;
     }
 
@@ -33,9 +40,7 @@ public class UserLogin : IUserLogin
             return null;
         }
 
-        var authClaims = _userClaims.UserClaims(user);
-
-        var token = _jwtToken.GenerateToken(authClaims);
+        var token = _jwtToken.GenerateJwtToken(user);
 
         return token;
     }

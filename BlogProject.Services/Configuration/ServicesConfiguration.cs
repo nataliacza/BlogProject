@@ -19,7 +19,6 @@ public static class ServicesConfiguration
         services.AddScoped<IUserLogin, UserLogin>();
         services.AddScoped<IUserRegister, UserRegister>();
 
-        services.AddScoped<ITokenGenerator, GenerateJwtToken>();
-        services.AddScoped<IUserClaims, GenerateJwtToken>();
+        services.AddScoped<ITokenGenerator, JwtTokenGenerator>();
     }
 }

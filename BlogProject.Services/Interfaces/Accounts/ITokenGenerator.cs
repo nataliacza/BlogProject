@@ -1,9 +1,9 @@
-﻿using System.Security.Claims;
+﻿using BlogProject.Database.Models;
 
 
 namespace BlogProject.Services.Interfaces.Accounts;
 
 public interface ITokenGenerator
 {
-    public string GenerateToken(List<Claim> authClaims);
+    public string GenerateJwtToken(ApplicationUser user);
 }

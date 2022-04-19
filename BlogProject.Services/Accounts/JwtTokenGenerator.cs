@@ -10,19 +10,45 @@ using System.Text;
 
 namespace BlogProject.Services.Accounts;
 
-public class GenerateJwtToken : ITokenGenerator, IUserClaims
+public class JwtTokenGenerator : ITokenGenerator
 {
     private readonly JwtConfiguration _jwtSettings;
 
-    public GenerateJwtToken(
+    public JwtTokenGenerator(
         IOptions<JwtConfiguration> jwtSettings)
     {
         _jwtSettings = jwtSettings.Value;
     }
 
-    public List<Claim> UserClaims(ApplicationUser user)
+    public string GenerateJwtToken(ApplicationUser user)
     {
-        var authClaims = new List<Claim>
+        var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Secret));
+
+        var signingCredentials = new SigningCredentials(symmetricSecurityKey,
+                                                        SecurityAlgorithms.HmacSha256);
+
+        var header = new JwtHeader(signingCredentials);
+
+        var claims = GetJwtClaims(user);
+
+        var currentDate = DateTime.UtcNow;
+
+        var playload = new JwtPayload(
+            issuer: null,
+            audience: null,
+            claims: claims,
+            notBefore: currentDate,
+            expires: currentDate.AddSeconds(_jwtSettings.ExpirationTime),
+            issuedAt: currentDate);
+
+        var securityToken = new JwtSecurityToken(header, playload);
+
+        return new JwtSecurityTokenHandler().WriteToken(securityToken);
+    }
+
+    private List<Claim> GetJwtClaims(ApplicationUser user)
+    {
+        var claims = new List<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id),
                 new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName),
@@ -33,29 +59,6 @@ public class GenerateJwtToken : ITokenGenerator, IUserClaims
                 )
             };
 
-        return authClaims;
-    }
-
-
-    public string GenerateToken(List<Claim> authClaims)
-    {
-        var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Secret));
-
-        var signingCredentials = new SigningCredentials(symmetricSecurityKey,
-                                                        SecurityAlgorithms.HmacSha256);
-
-        var header = new JwtHeader(signingCredentials);
-
-        var playload = new JwtPayload(
-            issuer: null,
-            audience: null,
-            claims: authClaims,
-            notBefore: DateTime.UtcNow,
-            expires: DateTime.UtcNow.AddSeconds(_jwtSettings.ExpirationTime),
-            issuedAt: DateTime.UtcNow);
-
-        var securityToken = new JwtSecurityToken(header, playload);
-
-        return new JwtSecurityTokenHandler().WriteToken(securityToken);
+        return claims;
     }
 }

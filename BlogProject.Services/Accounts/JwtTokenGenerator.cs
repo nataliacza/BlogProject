@@ -15,7 +15,8 @@ public class JwtTokenGenerator : ITokenGenerator
     private readonly JwtConfiguration _jwtSettings;
 
     public JwtTokenGenerator(
-        IOptions<JwtConfiguration> jwtSettings)
+        IOptions<JwtConfiguration> jwtSettings
+        )
     {
         _jwtSettings = jwtSettings.Value;
     }

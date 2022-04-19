@@ -8,22 +8,13 @@ namespace BlogProject.Services.Accounts;
 
 public class UserLogin : IUserLogin
 {
-<<<<<<< HEAD
     private readonly UserManager<ApplicationUser> _userManager;
-    private readonly IUserClaims _userClaims;
     private readonly ITokenGenerator _jwtToken;
 
     public UserLogin(
         UserManager<ApplicationUser> userManager,
-        IUserClaims userClaims,
-=======
-    private readonly UserManager<IdentityUser> _userManager;
-    private readonly ITokenGenerator _jwtToken;
-
-    public UserLogin(
-        UserManager<IdentityUser> userManager,
->>>>>>> master
-        ITokenGenerator jwtToken)
+        ITokenGenerator jwtToken
+        )
     {
         _userManager = userManager;
         _jwtToken = jwtToken;

@@ -9,19 +9,11 @@ namespace BlogProject.Services.Accounts;
 
 public class UserRegister : IUserRegister
 {
-<<<<<<< HEAD
     private readonly UserManager<ApplicationUser> _userManager;
     
     public UserRegister(
         UserManager<ApplicationUser> userManager
-       )
-=======
-    private readonly UserManager<IdentityUser> _userManager;
-
-    public UserRegister(
-        UserManager<IdentityUser> userManager
         )
->>>>>>> master
     {
         _userManager = userManager;
     }

@@ -4,6 +4,7 @@ using BlogProject.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BlogProject.Database.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220414074524_Update_Post_FK")]
+    partial class Update_Post_FK
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -101,8 +103,11 @@ namespace BlogProject.Database.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("AuthorId")
+                    b.Property<string>("ApplicationUserId")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Author")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Content")
                         .HasMaxLength(1000)
@@ -118,9 +123,9 @@ namespace BlogProject.Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AuthorId");
+                    b.HasIndex("ApplicationUserId");
 
-                    b.ToTable("Posts", (string)null);
+                    b.ToTable("Posts");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -258,11 +263,9 @@ namespace BlogProject.Database.Migrations
 
             modelBuilder.Entity("BlogProject.Database.Models.Post", b =>
                 {
-                    b.HasOne("BlogProject.Database.Models.ApplicationUser", "Author")
-                        .WithMany()
-                        .HasForeignKey("AuthorId");
-
-                    b.Navigation("Author");
+                    b.HasOne("BlogProject.Database.Models.ApplicationUser", null)
+                        .WithMany("Posts")
+                        .HasForeignKey("ApplicationUserId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -314,6 +317,11 @@ namespace BlogProject.Database.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("BlogProject.Database.Models.ApplicationUser", b =>
+                {
+                    b.Navigation("Posts");
                 });
 #pragma warning restore 612, 618
         }

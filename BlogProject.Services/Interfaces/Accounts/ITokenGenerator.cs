@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using BlogProject.Database.Models;
 
 
 namespace BlogProject.Services.Interfaces.Accounts;
 
 public interface ITokenGenerator
 {
-    public string GenerateJwtToken(IdentityUser user);
+    public string GenerateJwtToken(ApplicationUser user);
 }

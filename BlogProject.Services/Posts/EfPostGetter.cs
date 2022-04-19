@@ -22,7 +22,9 @@ public class EfPostGetter: IPostGetter
 
     public async Task<IEnumerable<PostDto>> GetAllPosts()
     {
-        var allPostsFromDb = await _dbContext.Posts.ToArrayAsync();
+        var allPostsFromDb = await _dbContext.Posts
+            .Include(x => x.Author)
+            .ToArrayAsync();
 
         var allMappedPosts = _autoMapper.Map<IEnumerable<PostDto>>(allPostsFromDb);
 
@@ -31,7 +33,9 @@ public class EfPostGetter: IPostGetter
 
     public async Task<PostDto?> GetSinglePost(int? postId)
     {
-        var getSinglePost = await _dbContext.Posts.FirstOrDefaultAsync(x => x.Id == postId);
+        var getSinglePost = await _dbContext.Posts
+            .Include(x => x.Author)
+            .FirstOrDefaultAsync(x => x.Id == postId);
 
         if (getSinglePost == null)
         {

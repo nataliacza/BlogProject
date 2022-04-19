@@ -10,11 +10,11 @@ using System.Text;
 
 namespace BlogProject.Services.Accounts;
 
-public class GenerateToken : ITokenGenerator
+public class JwtTokenGenerator : ITokenGenerator
 {
     private readonly JwtConfiguration _jwtSettings;
 
-    public GenerateToken(
+    public JwtTokenGenerator(
         IOptions<JwtConfiguration> jwtSettings)
     {
         _jwtSettings = jwtSettings.Value;

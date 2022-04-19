@@ -17,7 +17,7 @@ public static class ServicesConfiguration
         services.AddScoped<IPostUpdater, EfPostUpdater>();
 
         services.AddScoped<IUserLogin, UserLogin>();
-        services.AddScoped<IUserRegister, UserRegister>();
+        services.AddScoped<IUserRegister, UserCreator>();
 
         services.AddScoped<ITokenGenerator, JwtTokenGenerator>();
     }

@@ -43,7 +43,7 @@ public class Startup
                 .AddEntityFrameworkStores<ApplicationDbContext>() // it's for db using ef core
                 .AddDefaultTokenProviders();  // it's for jwt token
 
-        services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+        services.AddHttpContextAccessor();
 
         // Adding Authentication
         services
